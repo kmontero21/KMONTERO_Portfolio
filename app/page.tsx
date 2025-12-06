@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image"; 
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 
@@ -146,10 +147,13 @@ export default function Home() {
           <div className="relative mb-6 flex justify-center">
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-xl" />
-              <img
+              <Image
                 src="/images/kergrad1.jpg"
                 alt="KER - Full Stack Developer"
+                width={280} // Add this: w-70 is 280px (70 * 4)
+                height={280} // Add this: h-70 is 280px (70 * 4)
                 className="relative w-70 h-70 rounded-full object-cover border-4 border-slate-800 shadow-2xl"
+                priority // Optional: if this is a critical image (like a hero image)
               />
             </div>
           </div>
@@ -177,14 +181,14 @@ export default function Home() {
 
         <div className="space-y-4 text-slate-300 text-sm md:text-base max-w-3xl">
           <p>
-            I'm Ker Joshua Montero, a dedicated Full Stack Developer with a strong foundation in 
+            I&apos;m Ker Joshua Montero, a dedicated Full Stack Developer with a strong foundation in 
             both front-end and back-end technologies, holding a Computer Programmer diploma from 
-            Niagara College and a Bachelor's in Information Technology. My passion lies in building
+            Niagara College and a Bachelor&apos;s in Information Technology. My passion lies in building
             robust, end-to-end web applications that solve real-world problems and deliver tangible 
             results.
           </p>
           <p>
-            At Moyer Diebel Limited, I've led the digitization of critical systems using ASP.NET MVC,
+            At Moyer Diebel Limited, I&apos;ve led the digitization of critical systems using ASP.NET MVC,
             SQL, and React, demonstrating my ability to architect and implement secure, efficient 
             solutions from concept to deployment. My experience extends to managing on-prem 
             infrastructure, ensuring application reliability. Earlier in my career, I not only 

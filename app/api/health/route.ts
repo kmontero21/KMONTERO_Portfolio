@@ -1,5 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+
+console.log("BOOT MODULE LOADED at", new Date().toISOString());
 
 export async function GET() {
-  return NextResponse.json({ status: 'ok', time: Date.now() });
+  console.log("BOOT GET invoked at", new Date().toISOString());
+  return NextResponse.json({ ok: true, time: Date.now() });
 }

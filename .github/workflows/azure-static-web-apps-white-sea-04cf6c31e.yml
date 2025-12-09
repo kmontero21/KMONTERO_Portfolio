@@ -2,23 +2,17 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
     types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v3
@@ -31,17 +25,45 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
-      - name: Confirm .next/output/static contents
+      - name: "Debug: show important folders and search for index.html"
         run: |
-          echo "Listing .next/output/static folder:"
-          ls -la .next/output/static || echo ".next/output/static folder not found"
-
-      - name: Confirm out/ folder contents
-        run: |
-          echo "Current directory: $(pwd)"
+          echo "PWD: $(pwd)"
+          echo "Top-level files:"
           ls -la
-          echo "Listing out/ folder:"
-          ls -la out || echo "out/ folder not found"
+          echo "Listing .next (if exists):"
+          ls -la .next || echo ".next not found"
+          echo "Listing .next/output (if exists):"
+          ls -la .next/output || echo ".next/output not found"
+          echo "Listing .next/output/static (if exists):"
+          ls -la .next/output/static || echo ".next/output/static not found"
+          echo "Listing out/ (legacy):"
+          ls -la out || echo "out/ not found"
+          echo "Find any index.html (depth 6):"
+          find . -maxdepth 6 -type f -name 'index.html' -print || true
+
+      - name: Detect artifact folder containing index.html
+        id: find_artifact
+        run: |
+          ART=""
+          # prefer .next/output/static, then out, then any folder containing index.html
+          if [ -d ".next/output/static" ]; then ART=".next/output/static"
+          elif [ -d "out" ]; then ART="out"
+          else
+            # find first index.html under repo (limit depth to avoid scanning node_modules)
+            P=$(find . -maxdepth 6 -type f -name 'index.html' | head -n 1 || true)
+            if [ -n "$P" ]; then ART=$(dirname "$P"); fi
+          fi
+          echo "Detected artifact folder: $ART"
+          if [ -z "$ART" ]; then
+            echo "ERROR: no artifact folder detected (index.html not found)" >&2
+            exit 1
+          fi
+          echo "artifact=$ART" >> $GITHUB_OUTPUT
+
+      - name: Confirm detected artifact contents
+        run: |
+          echo "Artifact folder is: ${{ steps.find_artifact.outputs.artifact }}"
+          ls -la "${{ steps.find_artifact.outputs.artifact }}"
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
@@ -49,19 +71,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_SEA_04CF6C31E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"
+          app_location: "/" 
           api_location: ""
-          app_artifact_location: ".next/output/static"
+          app_artifact_location: ${{ steps.find_artifact.outputs.artifact }}
           skip_app_build: true
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_SEA_04CF6C31E }}
-          action: "close"

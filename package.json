@@ -9,6 +9,9 @@
     "export": "next export",
     "lint": "eslint"
   },
+  "engines": {
+  "node": ">=20.9.0"
+  },
   "dependencies": {
     "framer-motion": "^12.23.25",
     "lucide-react": "^0.556.0",
@@ -28,5 +31,4 @@
     "tailwindcss": "^4.1.17",
     "typescript": "^5"
   }
-  
 }

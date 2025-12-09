@@ -32,7 +32,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/"               # root of repo, where package.json is
-          api_location: "app/api"         # your API folder inside app/
+          api_location: ""         # your API folder inside app/
           app_artifact_location: ".next"  # Next.js build output folder
           skip_app_build: false           # build runs in workflow, so can be true or false
 

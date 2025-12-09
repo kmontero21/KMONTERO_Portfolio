@@ -31,7 +31,7 @@ jobs:
       - name: Build Next.js app
         run: |
           npm run build
-          npm run export
+
 
       - name: Confirm out/ folder contents
         run: |
@@ -49,7 +49,7 @@ jobs:
           app_location: "/"               # your app root (source)
           api_location: ""                # no API
           output_location: "out"          # legacy name many docs use
-          app_artifact_location: "out"    # explicitly where built files are
+          app_artifact_location: ".next/output/static"    # explicitly where built files are
           skip_app_build: true
 
   close_pull_request_job:

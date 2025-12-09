@@ -10,7 +10,7 @@
     "lint": "eslint"
   },
   "engines": {
-  "node": ">=20.9.0"
+    "node": "20.x"
   },
   "dependencies": {
     "framer-motion": "^12.23.25",

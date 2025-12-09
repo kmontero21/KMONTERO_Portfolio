@@ -37,10 +37,11 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_SEA_04CF6C31E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"          # app root
-          api_location: ""           # no API
-          output_location: "out"     # folder created by next build (with output: 'export')
-          skip_app_build: true       # we've built already
+          app_location: "/"               # your app root (source)
+          api_location: ""                # no API
+          output_location: "out"          # legacy name many docs use
+          app_artifact_location: "out"    # explicitly where built files are
+          skip_app_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

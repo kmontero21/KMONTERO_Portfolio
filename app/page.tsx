@@ -266,7 +266,7 @@ export default function Home() {
                 <div className="relative">
                   <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-xl" />
                   <Image
-                    src="/images/kergrad1.jpg"
+                    src="/kergrad1.jpg"
                     alt="KER - Full Stack Developer"
                     width={280}
                     height={280}
